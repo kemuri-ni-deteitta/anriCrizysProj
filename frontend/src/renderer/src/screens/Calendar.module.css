@@ -1,0 +1,286 @@
+.content {
+  padding: 16px 32px 40px;
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* ── Two-column layout ────────────────────────────────────── */
+.layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+@media (max-width: 780px) {
+  .layout {
+    flex-direction: column;
+  }
+  .detailPanel {
+    width: 100% !important;
+  }
+}
+
+/* ── Calendar panel ───────────────────────────────────────── */
+.calPanel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 20px;
+  flex-shrink: 0;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Month nav */
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monthTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.navBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.navBtn:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Grid */
+.grid7 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.emptyCell {
+  aspect-ratio: 1;
+}
+
+.dayCell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: default;
+  transition: background 0.12s, border-color 0.12s;
+  padding: 0;
+}
+
+.dayCellHasData {
+  cursor: pointer;
+  background: var(--color-bg);
+}
+
+.dayCellHasData:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-accent);
+}
+
+.dayCellToday .dayNum {
+  color: var(--color-accent);
+  font-weight: 800;
+}
+
+.dayCellToday {
+  border-color: var(--color-accent) !important;
+}
+
+.dayCellSelected {
+  background: rgba(24,144,255,0.1) !important;
+  border-color: var(--color-accent) !important;
+}
+
+.dayNum {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.dayDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+/* Skeleton */
+.skeleton {
+  height: 200px;
+  background: var(--color-border);
+  border-radius: 8px;
+  opacity: 0.4;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 0.55; }
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid var(--color-border);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legendToday {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1.5px solid var(--color-accent);
+}
+
+/* ── Detail panel ─────────────────────────────────────────── */
+.detailPanel {
+  flex: 1;
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 20px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detailEmpty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.detailEmptyIcon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.detailTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.detailCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.detailCard:hover {
+  border-color: rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.detailIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.detailInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailTestTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detailTopicName {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.detailScore {
+  font-size: 16px;
+  font-weight: 800;
+  flex-shrink: 0;
+}

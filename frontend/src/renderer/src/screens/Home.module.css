@@ -1,0 +1,274 @@
+.content {
+  padding: 20px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* ── Section ──────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.errorText {
+  font-size: 13px;
+  color: var(--color-error);
+}
+
+/* ── Metric cards ─────────────────────────────────────────── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metricCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.metricLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.metricValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.metricSub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* ── Skeleton placeholders ────────────────────────────────── */
+.skeleton3 {
+  height: 96px;
+  background: var(--color-border);
+  border-radius: 12px;
+  opacity: 0.5;
+  grid-column: 1 / -1;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.skeletonList {
+  height: 160px;
+  background: var(--color-border);
+  border-radius: 12px;
+  opacity: 0.4;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 0.6;  }
+}
+
+/* ── Session cards ────────────────────────────────────────── */
+.sessionCards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sessionCard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px 14px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  color: var(--color-text);
+  min-width: 0;
+}
+
+.sessionCard:hover {
+  border-color: var(--tc, var(--color-accent));
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  transform: translateY(-1px);
+}
+
+.sessionCard:active {
+  transform: translateY(0);
+}
+
+/* coloured left bar */
+.cardAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 12px 0 0 12px;
+}
+
+/* icon circle */
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* text block */
+.cardBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.cardTopic {
+  font-weight: 500;
+}
+
+.cardDot {
+  opacity: 0.4;
+}
+
+/* score */
+.cardScore {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.cardPct {
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cardFraction {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+/* chevron */
+.cardChevron {
+  font-size: 20px;
+  color: var(--color-border);
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.sessionCard:hover .cardChevron {
+  color: var(--tc, var(--color-accent));
+}
+
+/* ── Empty state ──────────────────────────────────────────── */
+.empty {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 48px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+
+.emptyTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.emptySub {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.emptyBtn {
+  margin-top: 12px;
+  padding: 9px 20px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.emptyBtn:hover {
+  background: var(--color-accent);
+  color: #fff;
+}

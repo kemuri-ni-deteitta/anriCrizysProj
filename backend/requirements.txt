@@ -1,0 +1,6 @@
+fastapi==0.115.5
+uvicorn==0.32.1
+python-multipart==0.0.18
+reportlab==4.2.5
+python-docx==1.1.2
+Pillow==11.0.0

@@ -1,0 +1,282 @@
+.content {
+  padding: 20px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.homeBtn {
+  padding: 7px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.homeBtn:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text);
+}
+
+/* ── Summary ──────────────────────────────────────────────── */
+.summary {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.summaryScore {
+  width: 100px;
+  min-width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.scoreNumber {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.scoreLabel {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.summaryInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summaryTitle {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.summaryDate {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.analysisBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.analysisItem {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.analysisIcon {
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Section title ────────────────────────────────────────── */
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* ── Question cards ───────────────────────────────────────── */
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.qCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-left: 4px solid var(--color-border);
+}
+
+.qCorrect {
+  border-left-color: var(--color-success);
+}
+
+.qWrong {
+  border-left-color: var(--color-error);
+}
+
+.qHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.qStatus {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.qNum {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+.qText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* ── Answer rows ──────────────────────────────────────────── */
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 30px;
+}
+
+.ansRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.ansDefault {
+  color: var(--color-text-secondary);
+}
+
+.ansCorrectSelected {
+  background: rgba(34, 197, 94, 0.08);
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.ansCorrectMissed {
+  background: rgba(34, 197, 94, 0.05);
+  color: var(--color-success);
+  opacity: 0.7;
+}
+
+.ansWrongSelected {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--color-error);
+  font-weight: 500;
+}
+
+.ansMarker {
+  width: 14px;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.ansText {
+  flex: 1;
+}
+
+.ansMeta {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Explanation ──────────────────────────────────────────── */
+.explanation,
+.studentComment {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  background: var(--color-bg);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.explanationLabel {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-right: 6px;
+}
+
+/* ── Action buttons ───────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.actionSecondary {
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.actionSecondary:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text);
+}
+
+.actionPrimary {
+  padding: 10px 24px;
+  border: 1px solid;
+  border-radius: var(--border-radius);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+
+.actionPrimary:hover {
+  opacity: 0.85;
+}

@@ -1,0 +1,18 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+*.pyo
+
+# Node / Electron
+frontend/node_modules/
+frontend/out/
+frontend/dist/
+
+# Data (generated at runtime)
+data/
+
+# OS
+.DS_Store
+Thumbs.db

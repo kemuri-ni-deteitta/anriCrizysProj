@@ -1,0 +1,144 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: 24px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  background: var(--color-surface-2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  font-size: 28px;
+}
+
+.logoIcon {
+  font-size: 28px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 10px 14px;
+  color: var(--color-text);
+  font-size: 14px;
+  transition: border-color 0.15s;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-accent);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: 13px;
+  color: var(--color-error);
+  text-align: center;
+}
+
+.button {
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--border-radius);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px;
+  margin-top: 4px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.backButton {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  padding: 9px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.backButton:hover:not(:disabled) {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text);
+}
+
+.backButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

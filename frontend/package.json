@@ -1,0 +1,53 @@
+{
+  "name": "crisis-trainer",
+  "version": "1.0.0",
+  "description": "Anti-crisis management trainer for students",
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "package": "electron-vite build && electron-builder",
+    "package:win": "electron-vite build && electron-builder --win"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0"
+  },
+  "build": {
+    "appId": "ru.crisistrainer.app",
+    "productName": "Тренажёр антикризисного управления",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.ico"
+    },
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "../data",
+        "to": "data",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  }
+}

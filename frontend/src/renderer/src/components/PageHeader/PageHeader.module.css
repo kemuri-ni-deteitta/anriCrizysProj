@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px 0;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

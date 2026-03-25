@@ -1,0 +1,16 @@
+.shell {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;       /* critical — prevents flex child from overflowing */
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
