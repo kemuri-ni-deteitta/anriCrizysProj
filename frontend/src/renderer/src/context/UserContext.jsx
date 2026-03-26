@@ -68,10 +68,20 @@ export function UserProvider({ children }) {
     return data
   }
 
+  async function logout() {
+    try {
+      await api.delete('/user')
+    } catch {
+      // Admin has no user.json — ignore errors
+    }
+    setUser(null)
+    setAuthState(AUTH_STATE.UNREGISTERED)
+  }
+
   return (
     <UserContext.Provider value={{
       user, authState,
-      register, adminLogin, requestAdminLogin, backToRegistration, updateUser
+      register, adminLogin, requestAdminLogin, backToRegistration, updateUser, logout
     }}>
       {children}
     </UserContext.Provider>

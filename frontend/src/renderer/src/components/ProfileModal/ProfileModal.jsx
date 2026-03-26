@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react'
-import { useUser } from '../../context/UserContext'
+import { useUser, AUTH_STATE } from '../../context/UserContext'
 import { CloseIcon, UploadIcon } from '../Icons'
 import { api } from '../../api'
 import { CONFIG } from '../../config'
 import styles from './ProfileModal.module.css'
 
 export default function ProfileModal({ onClose }) {
-  const { user, updateUser } = useUser()
+  const { user, authState, updateUser, logout } = useUser()
+  const isAdmin = authState === AUTH_STATE.ADMIN
 
   const [lastName,  setLastName]  = useState(user?.last_name  ?? '')
   const [firstName, setFirstName] = useState(user?.first_name ?? '')
@@ -83,76 +84,87 @@ export default function ProfileModal({ onClose }) {
       <div className={styles.modal}>
         {/* Header */}
         <div className={styles.header}>
-          <h2 className={styles.title}>Редактировать профиль</h2>
+          <h2 className={styles.title}>{isAdmin ? 'Профиль' : 'Редактировать профиль'}</h2>
           <button className={styles.closeBtn} onClick={onClose} title="Закрыть">
             <CloseIcon size={18} />
           </button>
         </div>
 
-        {/* Avatar */}
-        <div className={styles.avatarSection}>
-          <div className={styles.avatarWrap}>
-            {displayAvatar
-              ? <img src={displayAvatar} alt="avatar" className={styles.avatarImg} />
-              : <span className={styles.avatarInitials}>{initials}</span>
-            }
-          </div>
-          <button
-            className={styles.uploadBtn}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <UploadIcon size={14} />
-            Загрузить фото
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".jpg,.jpeg,.png"
-            onChange={handleFileChange}
-            style={{ display: 'none' }}
-          />
-        </div>
+        {!isAdmin && (
+          <>
+            {/* Avatar */}
+            <div className={styles.avatarSection}>
+              <div className={styles.avatarWrap}>
+                {displayAvatar
+                  ? <img src={displayAvatar} alt="avatar" className={styles.avatarImg} />
+                  : <span className={styles.avatarInitials}>{initials}</span>
+                }
+              </div>
+              <button
+                className={styles.uploadBtn}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <UploadIcon size={14} />
+                Загрузить фото
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg,.jpeg,.png"
+                onChange={handleFileChange}
+                style={{ display: 'none' }}
+              />
+            </div>
 
-        {/* Fields */}
-        <div className={styles.fields}>
-          <div className={styles.field}>
-            <label className={styles.label}>Фамилия</label>
-            <input
-              className={styles.input}
-              value={lastName}
-              onChange={e => setLastName(e.target.value)}
-              disabled={saving}
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label}>Имя</label>
-            <input
-              className={styles.input}
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
-              disabled={saving}
-            />
-          </div>
-          <div className={styles.field}>
-            <label className={styles.label}>Группа</label>
-            <input
-              className={styles.input}
-              value={group}
-              onChange={e => setGroup(e.target.value)}
-              disabled={saving}
-            />
-          </div>
-        </div>
+            {/* Fields */}
+            <div className={styles.fields}>
+              <div className={styles.field}>
+                <label className={styles.label}>Фамилия</label>
+                <input
+                  className={styles.input}
+                  value={lastName}
+                  onChange={e => setLastName(e.target.value)}
+                  disabled={saving}
+                />
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Имя</label>
+                <input
+                  className={styles.input}
+                  value={firstName}
+                  onChange={e => setFirstName(e.target.value)}
+                  disabled={saving}
+                />
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label}>Группа</label>
+                <input
+                  className={styles.input}
+                  value={group}
+                  onChange={e => setGroup(e.target.value)}
+                  disabled={saving}
+                />
+              </div>
+            </div>
 
-        {error && <p className={styles.error}>{error}</p>}
+            {error && <p className={styles.error}>{error}</p>}
 
-        {/* Actions */}
-        <div className={styles.actions}>
-          <button className={styles.cancelBtn} onClick={onClose} disabled={saving}>
-            Отмена
-          </button>
-          <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
-            {saving ? 'Сохранение...' : 'Сохранить'}
+            {/* Actions */}
+            <div className={styles.actions}>
+              <button className={styles.cancelBtn} onClick={onClose} disabled={saving}>
+                Отмена
+              </button>
+              <button className={styles.saveBtn} onClick={handleSave} disabled={saving}>
+                {saving ? 'Сохранение...' : 'Сохранить'}
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Logout */}
+        <div className={styles.logoutSection}>
+          <button className={styles.logoutBtn} onClick={logout} disabled={saving}>
+            {isAdmin ? 'Выйти из панели администратора' : 'Выйти из аккаунта'}
           </button>
         </div>
       </div>

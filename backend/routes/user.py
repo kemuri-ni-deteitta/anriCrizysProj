@@ -90,6 +90,14 @@ async def upload_avatar(file: UploadFile = File(...)):
     return {"avatar_path": str(avatar_path)}
 
 
+@router.delete("")
+def delete_user():
+    if not file_exists(USER_FILE):
+        raise HTTPException(status_code=404, detail="User not registered")
+    USER_FILE.unlink()
+    return {"ok": True}
+
+
 @router.post("/admin-login")
 def admin_login(data: AdminLogin):
     if data.login == ADMIN_LOGIN and data.password == ADMIN_PASSWORD:
