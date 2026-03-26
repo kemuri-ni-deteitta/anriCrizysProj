@@ -23,9 +23,9 @@ function Hint({ text }) {
 
 // ── Single answer option ──────────────────────────────────────────────────────
 function AnswerOption({ answer, type, selected, onToggle }) {
-  const isRadio    = type === 'single'
-  const inputType  = isRadio ? 'radio' : 'checkbox'
-  const inputId    = `ans_${answer.id}`
+  const isRadio   = type === 'single'
+  const inputType = isRadio ? 'radio' : 'checkbox'
+  const inputId   = `ans_${answer.id}`
 
   return (
     <label
@@ -147,7 +147,8 @@ export default function TestSession() {
     )
   }
 
-  const progress = Math.round(((currentIdx + 1) / total) * 100)
+  const answeredCount = questions.filter(q => (answers[q.id]?.selectedIds?.length ?? 0) > 0).length
+  const progress = Math.round((answeredCount / total) * 100)
 
   return (
     <div className={styles.page}>
@@ -164,7 +165,7 @@ export default function TestSession() {
           <span className={styles.testTitle}>{test.title}</span>
         </div>
         <span className={styles.progressLabel}>
-          Вопрос {currentIdx + 1} из {total}
+          {answeredCount} из {total} отвечено
         </span>
       </div>
 
@@ -176,11 +177,30 @@ export default function TestSession() {
         />
       </div>
 
+      {/* ── Question navigation ──────────────────────────────────────────────── */}
+      <div className={styles.questionNav}>
+        {questions.map((q, i) => {
+          const answered = (answers[q.id]?.selectedIds?.length ?? 0) > 0
+          const isActive = i === currentIdx
+          return (
+            <button
+              key={q.id}
+              className={`${styles.qNavBtn} ${isActive ? styles.qNavBtnActive : ''} ${answered && !isActive ? styles.qNavBtnAnswered : ''}`}
+              onClick={() => setCurrentIdx(i)}
+              title={`Вопрос ${i + 1}`}
+              style={isActive ? { background: color, borderColor: color } : {}}
+            >
+              {answered && !isActive ? '✓' : i + 1}
+            </button>
+          )
+        })}
+      </div>
+
       {/* ── Main content ────────────────────────────────────────────────────── */}
       <div className={styles.content}>
-
-        {/* Question + answers */}
         <div className={styles.questionPane}>
+
+          {/* Question header */}
           <div className={styles.questionHeader}>
             <span
               className={styles.qBadge}
@@ -188,9 +208,12 @@ export default function TestSession() {
             >
               {question.type === 'single' ? 'Один ответ' : 'Несколько ответов'}
             </span>
+            <span className={styles.qNumber}>Вопрос {currentIdx + 1}</span>
           </div>
+
           <h2 className={styles.questionText}>{question.text}</h2>
 
+          {/* Answer options */}
           <div className={styles.options}>
             {question.answers.map(answer => (
               <AnswerOption
@@ -201,6 +224,22 @@ export default function TestSession() {
                 onToggle={(id) => toggleAnswer(question.id, id, question.type)}
               />
             ))}
+          </div>
+
+          {/* Comment block */}
+          <div className={styles.commentBlock}>
+            <div className={styles.commentHeader}>
+              <span className={styles.commentIcon}>💬</span>
+              <span className={styles.commentTitle}>Объясните свой выбор</span>
+              <span className={styles.commentOptional}>необязательно</span>
+            </div>
+            <textarea
+              className={styles.commentTextarea}
+              value={currentAnswer.comment}
+              onChange={e => setComment(question.id, e.target.value)}
+              placeholder="Напишите, почему выбрали этот вариант..."
+              rows={4}
+            />
           </div>
 
           {/* Navigation */}
@@ -231,42 +270,8 @@ export default function TestSession() {
               </button>
             )}
           </div>
+
         </div>
-
-        {/* Comment panel */}
-        <div className={styles.commentPane}>
-          <div className={styles.commentHeader}>
-            <span className={styles.commentIcon}>💬</span>
-            <span className={styles.commentTitle}>Объясните свой выбор</span>
-          </div>
-          <p className={styles.commentHint}>
-            Необязательно. Ваш комментарий войдёт в отчёт и поможет преподавателю понять ход мыслей.
-          </p>
-          <textarea
-            className={styles.commentTextarea}
-            value={currentAnswer.comment}
-            onChange={e => setComment(question.id, e.target.value)}
-            placeholder="Напишите, почему выбрали именно этот вариант..."
-            rows={7}
-          />
-
-          {/* Step dots */}
-          <div className={styles.dots}>
-            {questions.map((q, i) => {
-              const answered = (answers[q.id]?.selectedIds?.length ?? 0) > 0
-              return (
-                <button
-                  key={q.id}
-                  className={`${styles.dot} ${i === currentIdx ? styles.dotActive : ''} ${answered && i !== currentIdx ? styles.dotAnswered : ''}`}
-                  onClick={() => setCurrentIdx(i)}
-                  title={`Вопрос ${i + 1}`}
-                  style={i === currentIdx ? { background: color, borderColor: color } : {}}
-                />
-              )
-            })}
-          </div>
-        </div>
-
       </div>
 
       {/* ── Exit confirm modal ───────────────────────────────────────────────── */}
