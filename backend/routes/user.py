@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from config import USER_FILE, AVATARS_DIR, ADMIN_LOGIN, ADMIN_PASSWORD
@@ -66,6 +67,17 @@ def update_user(data: UserUpdate):
         user["group"] = data.group
     write_json(USER_FILE, user)
     return user
+
+
+@router.get("/avatar")
+def get_avatar():
+    if not file_exists(USER_FILE):
+        raise HTTPException(status_code=404, detail="User not registered")
+    user = read_json(USER_FILE)
+    path = user.get("avatar_path")
+    if not path or not Path(path).exists():
+        raise HTTPException(status_code=404, detail="Avatar not found")
+    return FileResponse(path)
 
 
 @router.post("/avatar")

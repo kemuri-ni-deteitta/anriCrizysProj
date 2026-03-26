@@ -13,6 +13,7 @@ export default function ProfileModal({ onClose }) {
   const [firstName, setFirstName] = useState(user?.first_name ?? '')
   const [group,     setGroup]     = useState(user?.group      ?? '')
   const [avatarSrc, setAvatarSrc] = useState(null)
+  const [avatarTs, setAvatarTs] = useState(() => Date.now())
   const [error,     setError]     = useState('')
   const [saving,    setSaving]    = useState(false)
 
@@ -20,7 +21,7 @@ export default function ProfileModal({ onClose }) {
 
   // Build avatar display URL
   const displayAvatar = avatarSrc
-    || (user?.avatar_path ? `${CONFIG.API_BASE_URL}/user/avatar-file` : null)
+    || (user?.avatar_path ? `${CONFIG.API_BASE_URL}/user/avatar?t=${avatarTs}` : null)
 
   const initials = `${lastName?.[0] ?? ''}${firstName?.[0] ?? ''}`.toUpperCase() || '?'
 
@@ -51,6 +52,7 @@ export default function ProfileModal({ onClose }) {
         method: 'POST',
         body: formData
       })
+      setAvatarTs(Date.now())
     } catch {
       // Non-critical — preview still works
     }

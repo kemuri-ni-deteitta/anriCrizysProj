@@ -15,6 +15,7 @@ async function request(method, path, body = null) {
     const error = await response.json().catch(() => ({ detail: response.statusText }))
     throw new Error(error.detail || 'API error')
   }
+  if (response.status === 204) return null
   return response.json()
 }
 
