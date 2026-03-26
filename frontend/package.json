@@ -38,7 +38,13 @@
         "from": "../backend",
         "to": "backend",
         "filter": [
-          "**/*"
+          "python-embed/**",
+          "main.py",
+          "config.py",
+          "storage.py",
+          "seed.py",
+          "routes/**",
+          "fonts/**"
         ]
       },
       {

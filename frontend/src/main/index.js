@@ -2,35 +2,79 @@ import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn } from 'child_process'
+import { createWriteStream, mkdirSync } from 'fs'
+import { get } from 'http'
 
 let backendProcess = null
 
+function getLogStream() {
+  const logDir = join(app.getPath('userData'), 'logs')
+  mkdirSync(logDir, { recursive: true })
+  return createWriteStream(join(logDir, 'backend.log'), { flags: 'a' })
+}
+
 function startBackend() {
   const isDev = is.dev
+  let backendPath, args, env
 
-  // In development, run the Python script directly
-  // In production, run the bundled executable or script from extraResources
-  const backendPath = isDev
-    ? join(__dirname, '../../..', 'backend', 'main.py')
-    : join(process.resourcesPath, 'backend', 'main.py')
+  if (isDev) {
+    const pythonCmd = process.platform === 'win32' ? 'python' : 'python3'
+    backendPath = pythonCmd
+    args = [join(__dirname, '../../..', 'backend', 'main.py')]
+    env = process.env
+  } else {
+    backendPath = join(process.resourcesPath, 'backend', 'python-embed', 'python.exe')
+    args = [join(process.resourcesPath, 'backend', 'main.py')]
+    env = {
+      ...process.env,
+      CRISIS_DATA_DIR: join(process.resourcesPath, 'data'),
+      PYTHONPATH: join(process.resourcesPath, 'backend')
+    }
+  }
 
-  const pythonCmd = process.platform === 'win32' ? 'python' : 'python3'
+  const logStream = getLogStream()
+  logStream.write(`\n[${new Date().toISOString()}] Starting backend: ${backendPath} ${args.join(' ')}\n`)
 
-  backendProcess = spawn(pythonCmd, [backendPath], {
+  backendProcess = spawn(backendPath, args, {
     detached: false,
-    stdio: 'pipe'
+    stdio: 'pipe',
+    env
   })
 
   backendProcess.stdout.on('data', (data) => {
+    logStream.write(`[stdout] ${data}`)
     console.log(`[backend] ${data}`)
   })
 
   backendProcess.stderr.on('data', (data) => {
+    logStream.write(`[stderr] ${data}`)
     console.error(`[backend] ${data}`)
   })
 
   backendProcess.on('close', (code) => {
+    logStream.write(`[exit] code=${code}\n`)
     console.log(`[backend] process exited with code ${code}`)
+  })
+
+  backendProcess.on('error', (err) => {
+    logStream.write(`[error] ${err.message}\n`)
+    console.error(`[backend] failed to start: ${err.message}`)
+  })
+}
+
+function waitForBackend(retries = 30, delay = 1000) {
+  return new Promise((resolve) => {
+    const attempt = (n) => {
+      get('http://127.0.0.1:8000/api/health', (res) => {
+        if (res.statusCode === 200) resolve()
+        else if (n > 0) setTimeout(() => attempt(n - 1), delay)
+        else resolve()
+      }).on('error', () => {
+        if (n > 0) setTimeout(() => attempt(n - 1), delay)
+        else resolve()
+      })
+    }
+    attempt(retries)
   })
 }
 
@@ -66,7 +110,7 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   electronApp.setAppUserModelId('ru.crisistrainer')
 
   app.on('browser-window-created', (_, window) => {
@@ -74,9 +118,8 @@ app.whenReady().then(() => {
   })
 
   startBackend()
-
-  // Wait a moment for the backend to start before opening the window
-  setTimeout(createWindow, 1500)
+  await waitForBackend()
+  createWindow()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

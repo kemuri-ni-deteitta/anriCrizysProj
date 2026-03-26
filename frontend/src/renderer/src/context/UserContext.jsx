@@ -68,6 +68,12 @@ export function UserProvider({ children }) {
     return data
   }
 
+  async function refreshUser() {
+    const data = await api.get('/user')
+    setUser(data)
+    return data
+  }
+
   async function logout() {
     try {
       await api.delete('/user')
@@ -81,7 +87,7 @@ export function UserProvider({ children }) {
   return (
     <UserContext.Provider value={{
       user, authState,
-      register, adminLogin, requestAdminLogin, backToRegistration, updateUser, logout
+      register, adminLogin, requestAdminLogin, backToRegistration, updateUser, refreshUser, logout
     }}>
       {children}
     </UserContext.Provider>

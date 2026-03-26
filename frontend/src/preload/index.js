@@ -8,7 +8,6 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('api', {
       // File dialog for saving reports
       showSaveDialog: (options) => ipcRenderer.invoke('dialog:showSave', options),
-      // Get app paths
       getAppPath: () => ipcRenderer.invoke('app:getPath')
     })
   } catch (error) {
