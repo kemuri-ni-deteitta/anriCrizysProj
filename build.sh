@@ -3,6 +3,7 @@ set -e
 
 PYTHON_VERSION="3.10.11"
 PYTHON_SHORT="310"
+PYTHON_VERSION_PIP="3.10"
 EMBED_DIR="backend/python-embed"
 
 echo "=== Шаг 1: Скачиваем портативный Python для Windows ==="
@@ -22,12 +23,13 @@ pip install \
   --platform win_amd64 \
   --target "$EMBED_DIR/Lib/site-packages" \
   --implementation cp \
-  --python-version ${PYTHON_SHORT} \
+  --python-version ${PYTHON_VERSION_PIP} \
   --only-binary=:all: \
   -r backend/requirements.txt
 
 echo "=== Шаг 4: Собираем Electron установщик ==="
 cd frontend
+npm install
 npm run package:win
 
 echo ""

@@ -1,8 +1,13 @@
 import os
+import sys
 from pathlib import Path
 
-# Resolve data directory relative to the project root (one level up from backend/)
-_BACKEND_DIR = Path(__file__).parent
+# When bundled with PyInstaller --onefile, files are extracted to sys._MEIPASS
+if getattr(sys, 'frozen', False):
+    _BACKEND_DIR = Path(sys._MEIPASS)
+else:
+    _BACKEND_DIR = Path(__file__).parent
+
 _PROJECT_ROOT = _BACKEND_DIR.parent
 FONTS_DIR = _BACKEND_DIR / 'fonts'
 

@@ -51,7 +51,8 @@
         "from": "../data",
         "to": "data",
         "filter": [
-          "**/*"
+          "tests/**",
+          "topics.json"
         ]
       }
     ]

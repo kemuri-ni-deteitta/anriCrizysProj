@@ -26,7 +26,16 @@ jobs:
       - name: Build backend.exe
         run: |
           cd backend
-          pyinstaller --onefile --name backend main.py
+          pyinstaller --onefile --name backend `
+            --add-data "fonts;fonts" `
+            --hidden-import uvicorn.logging `
+            --hidden-import uvicorn.loops `
+            --hidden-import uvicorn.loops.auto `
+            --hidden-import uvicorn.loops.asyncio `
+            --hidden-import uvicorn.protocols.http.auto `
+            --hidden-import uvicorn.protocols.websockets.auto `
+            --hidden-import uvicorn.lifespan.on `
+            main.py
           copy dist\backend.exe backend.exe
 
       - name: Setup Node.js

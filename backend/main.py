@@ -1,4 +1,8 @@
 """Backend entry point — FastAPI + Uvicorn, runs on localhost."""
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
