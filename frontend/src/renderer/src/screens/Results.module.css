@@ -8,11 +8,44 @@
   min-width: 0;
 }
 
-/* ── Filter tabs ──────────────────────────────────────────── */
+/* ── Filter bar ───────────────────────────────────────────── */
+.filterBar {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .tabs {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.dateSelect {
+  padding: 5px 10px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.dateSelect:hover {
+  border-color: var(--color-text-secondary);
+  color: var(--color-text);
 }
 
 .tab {

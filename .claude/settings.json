@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python backend/main.py)",
+      "Bash(python backend/seed.py)",
+      "Bash(npm install)",
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(npm run preview)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "ask": [
+      "Bash(pip install:*)",
+      "Bash(npm run package:*)",
+      "Bash(./build.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git reset:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Edit(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env.*)",
+      "Read(./secrets/**)",
+      "Edit(./secrets/**)",
+      "Read(./config/credentials.json)",
+      "Edit(./config/credentials.json)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "env": {
+    "CRISIS_HOST": "127.0.0.1",
+    "CRISIS_PORT": "8000"
+  }
+}

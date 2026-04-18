@@ -6,6 +6,14 @@ import { api } from '../api'
 import { TOPIC_COLORS, TOPIC_ID_ICONS } from '../theme'
 import styles from './Results.module.css'
 
+const DATE_OPTIONS = [
+  { value: 'all',   label: 'Все время' },
+  { value: 'today', label: 'Сегодня' },
+  { value: 'week',  label: 'Последние 7 дней' },
+  { value: 'month', label: 'Этот месяц' },
+  { value: 'year',  label: 'Этот год' },
+]
+
 function scoreColor(pct) {
   if (pct >= 70) return 'var(--color-success)'
   if (pct >= 40) return 'var(--color-warning)'
@@ -19,9 +27,24 @@ function formatDate(iso) {
   })
 }
 
+function filterByDate(list, period) {
+  if (period === 'all') return list
+  const now = new Date()
+  return list.filter(s => {
+    if (!s.finished_at) return false
+    const d = new Date(s.finished_at)
+    if (period === 'today') return d.toDateString() === now.toDateString()
+    if (period === 'week')  { const w = new Date(now); w.setDate(now.getDate() - 7); return d >= w }
+    if (period === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+    if (period === 'year')  return d.getFullYear() === now.getFullYear()
+    return true
+  })
+}
+
 export default function Results() {
   const navigate = useNavigate()
   const [activeTopicId, setActiveTopicId] = useState('all')
+  const [datePeriod, setDatePeriod]       = useState('all')
 
   const { data: sessions, loading, error } = useAsync(
     () => api.get('/sessions/detailed')
@@ -36,9 +59,9 @@ export default function Results() {
 
   const filtered = useMemo(() => {
     if (!sessions) return []
-    if (activeTopicId === 'all') return sessions
-    return sessions.filter(s => s.topic_id === activeTopicId)
-  }, [sessions, activeTopicId])
+    let result = activeTopicId === 'all' ? sessions : sessions.filter(s => s.topic_id === activeTopicId)
+    return filterByDate(result, datePeriod)
+  }, [sessions, activeTopicId, datePeriod])
 
   const topicsMap = useMemo(() => {
     if (!topics) return {}
@@ -51,29 +74,40 @@ export default function Results() {
 
       <div className={styles.content}>
 
-        {/* Filter tabs */}
+        {/* Filters */}
         {!loading && sessions?.length > 0 && (
-          <div className={styles.tabs}>
-            <button
-              className={`${styles.tab} ${activeTopicId === 'all' ? styles.tabActive : ''}`}
-              onClick={() => setActiveTopicId('all')}
+          <div className={styles.filterBar}>
+            <div className={styles.tabs}>
+              <button
+                className={`${styles.tab} ${activeTopicId === 'all' ? styles.tabActive : ''}`}
+                onClick={() => setActiveTopicId('all')}
+              >
+                Все ({sessions.length})
+              </button>
+              {usedTopicIds.map(id => {
+                const count = sessions.filter(s => s.topic_id === id).length
+                const color = TOPIC_COLORS[id] ?? '#6b7280'
+                return (
+                  <button
+                    key={id}
+                    className={`${styles.tab} ${activeTopicId === id ? styles.tabActive : ''}`}
+                    style={activeTopicId === id ? { borderColor: color, color } : {}}
+                    onClick={() => setActiveTopicId(id)}
+                  >
+                    {TOPIC_ID_ICONS[id]} {topicsMap[id] ?? id} ({count})
+                  </button>
+                )
+              })}
+            </div>
+            <select
+              className={styles.dateSelect}
+              value={datePeriod}
+              onChange={e => setDatePeriod(e.target.value)}
             >
-              Все ({sessions.length})
-            </button>
-            {usedTopicIds.map(id => {
-              const count = sessions.filter(s => s.topic_id === id).length
-              const color = TOPIC_COLORS[id] ?? '#6b7280'
-              return (
-                <button
-                  key={id}
-                  className={`${styles.tab} ${activeTopicId === id ? styles.tabActive : ''}`}
-                  style={activeTopicId === id ? { borderColor: color, color } : {}}
-                  onClick={() => setActiveTopicId(id)}
-                >
-                  {TOPIC_ID_ICONS[id]} {topicsMap[id] ?? id} ({count})
-                </button>
-              )
-            })}
+              {DATE_OPTIONS.map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
           </div>
         )}
 
@@ -146,7 +180,7 @@ export default function Results() {
 
         {/* No matches for filter */}
         {!loading && !error && sessions?.length > 0 && filtered.length === 0 && (
-          <p className={styles.noMatch}>Нет прохождений по выбранной тематике</p>
+          <p className={styles.noMatch}>Нет прохождений по выбранным фильтрам</p>
         )}
 
       </div>

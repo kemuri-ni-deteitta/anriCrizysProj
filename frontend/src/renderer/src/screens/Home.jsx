@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PageHeader from '../components/PageHeader/PageHeader'
 import { useAsync } from '../hooks/useAsync'
 import { api } from '../api'
 import { TOPIC_COLORS, TOPIC_ID_ICONS } from '../theme'
 import styles from './Home.module.css'
+
+const DATE_OPTIONS = [
+  { value: 'all',   label: 'Все время' },
+  { value: 'today', label: 'Сегодня' },
+  { value: 'week',  label: 'Последние 7 дней' },
+  { value: 'month', label: 'Этот месяц' },
+  { value: 'year',  label: 'Этот год' },
+]
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function formatDate(iso) {
@@ -25,6 +33,20 @@ function scoreColor(pct) {
   return 'var(--color-error)'
 }
 
+function filterByDate(list, period) {
+  if (period === 'all') return list
+  const now = new Date()
+  return list.filter(s => {
+    if (!s.finished_at) return false
+    const d = new Date(s.finished_at)
+    if (period === 'today') return d.toDateString() === now.toDateString()
+    if (period === 'week')  { const w = new Date(now); w.setDate(now.getDate() - 7); return d >= w }
+    if (period === 'month') return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+    if (period === 'year')  return d.getFullYear() === now.getFullYear()
+    return true
+  })
+}
+
 // ── Metric card ───────────────────────────────────────────────────────────────
 function MetricCard({ label, value, sub, accent }) {
   return (
@@ -41,7 +63,28 @@ function MetricCard({ label, value, sub, accent }) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const navigate = useNavigate()
-  const { data, loading, error } = useAsync(() => api.get('/dashboard'))
+  const { data, loading, error }               = useAsync(() => api.get('/dashboard'))
+  const { data: sessions, loading: sessLoading } = useAsync(() => api.get('/sessions/detailed'))
+  const { data: topics }                       = useAsync(() => api.get('/topics'))
+
+  const [activeTopicId, setActiveTopicId] = useState('all')
+  const [datePeriod, setDatePeriod]       = useState('all')
+
+  const usedTopicIds = useMemo(() => {
+    if (!sessions) return []
+    return [...new Set(sessions.map(s => s.topic_id))]
+  }, [sessions])
+
+  const topicsMap = useMemo(() => {
+    if (!topics) return {}
+    return Object.fromEntries(topics.map(t => [t.id, t.name]))
+  }, [topics])
+
+  const filteredSessions = useMemo(() => {
+    if (!sessions) return []
+    let result = activeTopicId === 'all' ? sessions : sessions.filter(s => s.topic_id === activeTopicId)
+    return filterByDate(result, datePeriod)
+  }, [sessions, activeTopicId, datePeriod])
 
   return (
     <>
@@ -84,10 +127,47 @@ export default function Home() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Последние прохождения</h2>
 
-          {loading && <div className={styles.skeletonList} />}
-          {error   && <p className={styles.errorText}>Ошибка загрузки данных</p>}
+          {/* Filters */}
+          {!sessLoading && sessions?.length > 0 && (
+            <div className={styles.filterBar}>
+              <div className={styles.tabs}>
+                <button
+                  className={`${styles.tab} ${activeTopicId === 'all' ? styles.tabActive : ''}`}
+                  onClick={() => setActiveTopicId('all')}
+                >
+                  Все ({sessions.length})
+                </button>
+                {usedTopicIds.map(id => {
+                  const count = sessions.filter(s => s.topic_id === id).length
+                  const color = TOPIC_COLORS[id] ?? '#6b7280'
+                  return (
+                    <button
+                      key={id}
+                      className={`${styles.tab} ${activeTopicId === id ? styles.tabActive : ''}`}
+                      style={activeTopicId === id ? { borderColor: color, color } : {}}
+                      onClick={() => setActiveTopicId(id)}
+                    >
+                      {TOPIC_ID_ICONS[id]} {topicsMap[id] ?? id} ({count})
+                    </button>
+                  )
+                })}
+              </div>
+              <select
+                className={styles.dateSelect}
+                value={datePeriod}
+                onChange={e => setDatePeriod(e.target.value)}
+              >
+                {DATE_OPTIONS.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          {!loading && !error && data.recent_sessions.length === 0 && (
+          {(loading || sessLoading) && <div className={styles.skeletonList} />}
+          {error && <p className={styles.errorText}>Ошибка загрузки данных</p>}
+
+          {!loading && !sessLoading && !error && sessions?.length === 0 && (
             <div className={styles.empty}>
               <span className={styles.emptyIcon}>📋</span>
               <p className={styles.emptyTitle}>Тестов пока не пройдено</p>
@@ -101,9 +181,13 @@ export default function Home() {
             </div>
           )}
 
-          {!loading && !error && data.recent_sessions.length > 0 && (
+          {!loading && !sessLoading && !error && sessions?.length > 0 && filteredSessions.length === 0 && (
+            <p className={styles.noMatch}>Нет прохождений по выбранным фильтрам</p>
+          )}
+
+          {!loading && !sessLoading && !error && filteredSessions.length > 0 && (
             <div className={styles.sessionCards}>
-              {data.recent_sessions.map(s => {
+              {filteredSessions.map(s => {
                 const topicColor = TOPIC_COLORS[s.topic_id] ?? '#6b7280'
                 const dotColor   = scoreColor(s.correct_pct)
                 const icon       = TOPIC_ID_ICONS[s.topic_id] ?? '📋'
