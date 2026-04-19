@@ -130,7 +130,9 @@ def _build_pdf(session, user, test) -> bytes:
         if comment:
             story.append(Paragraph(f"Комментарий студента: {comment}", body_style))
 
-        story.append(Paragraph(f"Пояснение: {q['explanation']}", body_style))
+        explanation = q.get('explanation', '')
+        if explanation:
+            story.append(Paragraph(f"Пояснение: {explanation}", body_style))
         story.append(Spacer(1, 0.3*cm))
 
     # Summary
@@ -196,7 +198,9 @@ def _build_docx(session, user, test) -> bytes:
         if comment:
             doc.add_paragraph(f"Комментарий: {comment}")
 
-        doc.add_paragraph(f"Пояснение: {q['explanation']}")
+        explanation = q.get('explanation', '')
+        if explanation:
+            doc.add_paragraph(f"Пояснение: {explanation}")
 
     doc.add_heading("Итог", 1)
     pct = round(correct_count / total * 100) if total else 0
